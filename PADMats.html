@@ -1,0 +1,70 @@
+<!doctype html>
+
+<html>
+    <head>
+        <title>Puzzle and Dragons Materials</title>
+    </head>
+
+    <body>
+        <form>
+            <input type="text" id="searchBox" list"monsterlist" placeholder="Enter monster #" autocomplete="off">
+            <datalist id="monsterlist"></datalist>
+        </form><br>
+
+        <h1 id="nameField"></h1><br>
+        
+        <script>
+            var monsters;
+            var form;
+
+            function getJSONobj(url, callback) { //TODO implement using Promise
+                var req = new XMLHttpRequest();
+                req.open("GET", url, true);
+                req.onload = function (e) {
+                    if (req.readyState === 4) {
+                        if (req.status === 200) {
+                            callback(JSON.parse(req.responseText));
+                        }
+                        else {
+                            console.error(req.statusText);
+                        }
+                    }
+                }
+                req.onerror = function (e) {
+                    console.error(req.statusText);
+                }
+
+                req.send(null);
+            }
+
+            //Gets a list of names that match the search and displays it in text area
+            function handleSearch(searchValue) {
+                var searchList = [];
+                var nameList = [];
+                var unit;
+
+                for (var x = 0; x < monsters.length; x++) {
+                    unit = monsters[x];
+                    if (unit.name.toLowerCase().indexOf(searchValue.toLowerCase()) > -1) {
+                        searchList.push(unit);
+                    }
+                }
+
+                nameList = searchList.map(function(card) {
+                    return card.name;
+                });
+                document.getElementById("nameField").innerHTML = nameList;
+            }
+
+            getJSONobj("https://www.padherder.com/api/monsters/", function(result) {
+                monsters = result;
+            });  
+
+            form = document.querySelector("form");
+            form.addEventListener("submit", function(e) {
+                handleSearch(form.elements.searchBox.value);
+                e.preventDefault();
+            })
+        </script>
+    </body>
+</html>
