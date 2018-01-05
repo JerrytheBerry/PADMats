@@ -56,9 +56,17 @@
                 document.getElementById("nameField").innerHTML = nameList;
             }
 
+            function populateDatalist(datalist) {
+                monsters.forEach(function(item) {
+                    var option = document.createElement("option");
+                    option.value = item.name;
+                    datalist.appendChild(option);
+                })
+            }
+
             getJSONobj("https://www.padherder.com/api/monsters/", function(result) {
                 monsters = result;
-            });  
+            });
 
             form = document.querySelector("form");
             form.addEventListener("submit", function(e) {
