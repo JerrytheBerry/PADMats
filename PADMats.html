@@ -7,7 +7,7 @@
 
     <body>
         <form>
-            <input type="text" id="searchBox" list"monsterlist" placeholder="Enter monster #" autocomplete="off">
+            <input type="text" id="searchBox" list="monsterlist" placeholder="Enter monster #">
             <datalist id="monsterlist"></datalist>
         </form><br>
 
@@ -61,18 +61,19 @@
                     var option = document.createElement("option");
                     option.value = item.name;
                     datalist.appendChild(option);
-                })
+                });
             }
 
             getJSONobj("https://www.padherder.com/api/monsters/", function(result) {
                 monsters = result;
+                populateDatalist(document.getElementById("monsterlist"));
             });
 
             form = document.querySelector("form");
             form.addEventListener("submit", function(e) {
                 handleSearch(form.elements.searchBox.value);
                 e.preventDefault();
-            })
+            });
         </script>
     </body>
 </html>
